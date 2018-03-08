@@ -12,3 +12,8 @@ $ npm run dev
 $ npm install
 $ npm run build
 ```
+## ESLInt Setup with Visual Studio Code:
+
+```
+Install [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) extension
+```
