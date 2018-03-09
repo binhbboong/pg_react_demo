@@ -2,7 +2,7 @@ import React from 'react';
 import find from 'lodash/find';
 import isEmpty from 'lodash/isEmpty';
 import omit from 'lodash/omit';
-import * as Validators from '../../../untils/validation';
+import * as Validators from '../../../utils/validation';
 
 function ValidateForm(data) {
   return function FormData(Form) {
