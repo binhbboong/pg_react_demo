@@ -1,4 +1,4 @@
-import { get, post, put } from '../untils/api';
+import { get, post, put } from '../utils/api';
 import { RegisterTypes } from '../actionTypes/register';
 
 export const selectUser = id => ({ type: RegisterTypes.SELECT_USER, data: id });
