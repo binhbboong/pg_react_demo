@@ -1,6 +1,6 @@
 import { get, post, put } from '../utils/api';
 import { RegisterTypes } from '../actionTypes/register';
-import generateHttpRequestActions from '../untils/makeRequest';
+import generateHttpRequestActions from '../utils/makeRequest';
 
 export const selectUser = id => ({ type: RegisterTypes.SELECT_USER, data: id });
 
