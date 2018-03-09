@@ -2,11 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Button, Table } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { getUsers } from '../../../../actions/register';
+import { getUsers, selectUser, updateUser } from '../../../../actions/register';
 
 import './styles.less';
 
-class UserList extends React.Component {
+export default class UserList extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -18,7 +18,7 @@ class UserList extends React.Component {
     return (
       <div>
         <h2>User Table</h2>
-        <Button bsStyle="primary"><Link to="user/create">Create User</Link></Button>
+        <Link to="/user/create"><Button bsStyle="primary" onClick={() => this.props.dispatch(updateUser({}))}>Create User</Button></Link>
         <Table striped bordered condensed hover responsive>
           <thead>
             <tr>
@@ -32,12 +32,12 @@ class UserList extends React.Component {
             {
               users.map(u =>
                 (
-                  <tr key={`${u.username}`}>
+                  <tr key={`${u.id}`}>
                     <td> {u.name} </td>
                     <td> {u.username} </td>
                     <td> {u.email} </td>
                     <td>
-                      <Button bsStyle="success"><Link to={`user/${u.id}`}>Edit</Link></Button>
+                      <Link to={`/user/${u.id}`}><Button bsStyle="success" onClick={() => this.props.dispatch(selectUser(u.id))}>Edit</Button></Link>
                       <Button bsStyle="danger">Delete</Button>
                     </td>
                   </tr>
@@ -49,5 +49,3 @@ class UserList extends React.Component {
     );
   }
 }
-
-export default connect(state => state.register)(UserList);

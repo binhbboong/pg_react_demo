@@ -1,5 +1,6 @@
 import React from 'react';
 import find from 'lodash/find';
+import isEmpty from 'lodash/isEmpty';
 import omit from 'lodash/omit';
 import * as Validators from '../../../untils/validation';
 
@@ -9,63 +10,85 @@ function ValidateForm(data) {
       constructor() {
         super();
         this.state = {
-          valueForm: data,
-          validated: false,
           form: {
             value: {},
             error: {}
           }
         };
       }
-      onChange = (event) => {
+      
+      onChange = (event, callback: Function) => (key) => {
         const { form } = this.state;
-        const valueForm = {
-          ...form,
-          value: { ...form.value, [event.target.name]: event.target.value }
-        };
-        this.setState({ form: valueForm });
+        form.value = { ...form.value, [key]: event.target.value };
+        form.error = !isEmpty(this.handleValidate(event.target.value)(key)) ? { ...form.error, [key]: this.handleValidate(event.target.value)(key) } : omit(form.error, [key]);
+        this.setState({ form });
+        return callback(event.target.value);
       };
-      handleValidate = (event) => {
-        const label = find(data, item => item.type === event.target.name);
-        const { form } = this.state;
+      
+      /*
+        This function handle action to validate form when change elements
+      */
+      handleValidate = value => (key) => {
+        const label = find(data, item => item.name === key);
+        let error = {};
         if (label.validate.length) {
-          const validateResult = this.validateField(label, event.target.value);
-          form.error = validateResult[event.target.name].length
-            ? Object.assign(form.error, validateResult)
-            : omit(form.error, [event.target.name]);
+          const validateResult = this.validateField(label, value);
+          error = !isEmpty(validateResult) ? validateResult : {};
         }
-        this.setState(form);
+        return error;
       };
+      
+      /*
+        This function validate field data.
+      */
       validateField = (label, value) => {
-        const error = [];
+        let result = {};
         label.validate.forEach((t) => {
-          if (Validators[t](value)) error.push(Validators[t](value));
+          if (Validators[t](value)) { 
+            result = Validators[t](value);
+          }
         });
-        return { [label.type]: error };
+        return result;
       };
-      validateForm = (callback: Function) => {
+      
+
+      /*
+        This function get all info validate from all fields.
+      */
+      validateForm = (dataFields, callback: Function) => {
         const { form } = this.state;
+        form.value = dataFields ? this.updateValueFields(data, dataFields) : {};
         form.error = {};
         Object.keys(data).forEach((key) => {
           if (data[key].validate && data[key].validate.length) {
-            form.error = (
-              this.validateField(data[key], form.value[data[key].type])[data[key].type].length
-              &&
-              Object.assign(form.error, this.validateField(data[key], form.value[data[key].type])))
-              || {};
+            const errorData = this.validateField(data[key], form.value[data[key].name]);
+            form.error = isEmpty(errorData) ? {} : Object.assign(form.error, { [data[key].name]: errorData });
           }
         });
         this.setState(form);
         return callback(form);
       };
+      
+      updateValueFields = (fields, dataFields: Object) => {
+        const formData = {};
+        if (fields) {
+          fields.forEach((field) => {
+            if (dataFields.hasOwnProperty(field.name)) {
+              Object.assign(formData, { [field.name]: dataFields[field.name] });
+            }
+          });
+        }
+        return formData;
+      };
+      
       render() {
         return (
           <Form
             onChange={this.onChange}
             form={this.state.form}
-            validated={this.state.validated}
             handleValidate={this.handleValidate}
             validateForm={this.validateForm}
+            updateValueFields={this.updateValueFields}
             {...this.props}
           />
         );

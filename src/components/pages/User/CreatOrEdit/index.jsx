@@ -3,52 +3,62 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { FormGroup, FormControl, ControlLabel, HelpBlock, Button } from 'react-bootstrap';
 import MyForm from '../../../common/FormValidate';
-import { getUsers } from '../../../../actions/register';
+import { createUser, updateUser, editUser } from '../../../../actions/register';
 import './styles.less';
 
-const userDefault = {
-  name: '',
-  email: '',
-  username: ''
-};
-
-const formData = [
+const fieldsValidate = [
   {
-    type: 'name',
+    name: 'name',
     validate: ['required']
   },
   {
-    type: 'username',
+    name: 'username',
     validate: ['required']
   },
   {
-    type: 'email',
+    name: 'email',
     validate: ['emailAddress']
   }
 ];
+
+const messageError = error => error && <span>({error.message})</span>;
 
 class CreateOrEditUser extends React.Component {
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
+  
   handleSubmit = (e) => {
     e.preventDefault();
-    this.props.validateForm((validate) => {
+    const { userSelected } = this.props;
+    const isEdit = !!this.props.match.params.id;
+    this.props.validateForm(userSelected, (validate) => {
+      this.props.dispatch(isEdit ? editUser(validate.value, this.props.match.params.id) : createUser(validate.value))
+        .then(() => {
+          this.props.history.push('/');
+        }); 
     });
   }
-  fieldGroup = ({ id, label, help, ...props }) =>
+
+  handleUpdate = key => (event) => {
+    const { userSelected } = this.props;
+    this.props.onChange(event, (value) => {
+      userSelected[key] = value;
+      this.props.dispatch(updateUser(userSelected));
+    })(key);
+  }
+  
+  fieldGroup = ({ id, label, error, ...props }) =>
     (
-      <FormGroup controlId={id}>
-        <ControlLabel>{label}</ControlLabel>
+      <FormGroup controlId={id} validationState={error ? 'error' : null}>
+        <ControlLabel>{label} {messageError(error)} </ControlLabel>
         <FormControl {...props} />
-        {help && <HelpBlock>{help}</HelpBlock>}
       </FormGroup>
     )
+  
   render() {
-    const { users, form, onChange } = this.props;
-    const { id } = this.props.match.params;
-    const user = id ? users.find(u => u.id.toString() === id) : userDefault;
+    const { form, userSelected } = this.props;
     return (
       <form onSubmit={this.handleSubmit} >
         <this.fieldGroup
@@ -56,8 +66,9 @@ class CreateOrEditUser extends React.Component {
           type="text"
           label="Name"
           placeholder="Enter name"
-          value={form.value.name || user.name}
-          onChange={onChange}
+          value={userSelected.name}
+          onChange={this.handleUpdate('name')}
+          error={form.error.name}
           name="name"
         />
         <this.fieldGroup
@@ -65,31 +76,30 @@ class CreateOrEditUser extends React.Component {
           type="text"
           label="Username"
           placeholder="Enter username"
-          value={form.value.username || user.username}
-          onChange={onChange}
+          value={userSelected.username}
+          onChange={this.handleUpdate('username')}
           name="username"
+          error={form.error.username}
         />
         <this.fieldGroup
           id="formControlsPassword"
           label="Email Address"
           placeholder="Enter email"
           type="email"
-          value={form.value.password || user.email}
-          onChange={onChange}
+          value={userSelected.email}
+          onChange={this.handleUpdate('email')}
+          error={form.error.email}
           name="email"
         />
         <FormGroup>
           <Button bsStyle="primary" type="submit">Save</Button>
         </FormGroup>
         <FormGroup>
-          <Button bsStyle="info"><Link to="/">Cancel</Link></Button>
+          <Link to="/"><Button bsStyle="info">Cancel</Button></Link>
         </FormGroup>
       </form>
     );
   }
 }
 
-
-const createOrEditUserForm = MyForm(formData)(CreateOrEditUser);
-
-export default connect(state => state.register)(createOrEditUserForm);
+export default MyForm(fieldsValidate)(CreateOrEditUser);

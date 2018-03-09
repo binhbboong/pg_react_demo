@@ -3,18 +3,6 @@ import { reduce } from 'lodash';
 import { SERVER_URL } from '../constants/app';
 import { needCache, getCachedCollection } from './cache';
 
-const formatData = (value) => {
-  if (value instanceof Date) {
-    return value.toJSON();
-  }
-  return value;
-};
-
-const transformData = data => reduce(data, (result, current, key) => {
-  result[key] = formatData(current);
-  return result;
-}, {});
-
 const formatAndRejectError = error => Promise.reject(error);
 
 // AJAX method
@@ -32,7 +20,7 @@ export const get = (path, params) => {
     Promise.resolve(cached) :
     axios({
       url: (SERVER_URL || '') + path,
-      params: transformData(params),
+      params,
       responseType: 'json'
     })
       .then((res) => {
@@ -40,17 +28,17 @@ export const get = (path, params) => {
         if (cachedCollection) {
           cachedCollection[path] = res.data;
         }
-        return res.data;
+        return Promise.resolve(res.data);
       })
       .catch(formatAndRejectError);
 };
 
-export const post = (path, params, data) =>
+export const post = (path, data, params) => 
   axios({
     method: 'post',
     url: (SERVER_URL || '') + path,
-    params: transformData(params),
-    data: transformData(data),
+    params,
+    data,
     responseType: 'json',
     timeout: 15000
   })
@@ -60,18 +48,18 @@ export const post = (path, params, data) =>
 export const put = (path, data) =>
   axios({
     method: 'put',
-    data: transformData(data),
+    data,
     url: SERVER_URL + path,
     responseType: 'json',
     timeout: 15000
   })
-    .then(res => res.data)
+    .then(res => Promise.resolve(res.data))
     .catch(formatAndRejectError);
 
 export const del = (path, data) =>
   axios({
     method: 'delete',
-    data: transformData(data),
+    data,
     url: SERVER_URL + path,
     responseType: 'json',
     timeout: 15000
