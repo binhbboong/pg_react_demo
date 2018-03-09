@@ -28,7 +28,7 @@ export const get = (path, params) => {
         if (cachedCollection) {
           cachedCollection[path] = res.data;
         }
-        return Promise.resolve(res.data);
+        return res.data;
       })
       .catch(formatAndRejectError);
 };
