@@ -1,8 +1,7 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import isEmpty from 'lodash/isEmpty';
-import { FormGroup, FormControl, ControlLabel, HelpBlock, Button } from 'react-bootstrap';
+import { FormGroup, FormControl, ControlLabel, Button } from 'react-bootstrap';
 import MyForm from '../../../common/FormValidate';
 import { createUser, updateUser, editUser } from '../../../../actions/user';
 import './styles.less';
