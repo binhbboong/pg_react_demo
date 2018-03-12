@@ -24,4 +24,4 @@ export class App extends React.Component {
     );
   }
 }
-export default withRouter(connect(state => state.register)(App));
+export default withRouter(connect(state => state.user)(App));

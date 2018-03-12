@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { FormGroup, FormControl, ControlLabel, HelpBlock, Button } from 'react-bootstrap';
 import MyForm from '../../../common/FormValidate';
-import { createUser, updateUser, editUser } from '../../../../actions/register';
+import { createUser, updateUser, editUser } from '../../../../actions/user';
 import './styles.less';
 
 const fieldsValidate = [
