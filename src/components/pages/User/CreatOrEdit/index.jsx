@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import isEmpty from 'lodash/isEmpty';
 import { FormGroup, FormControl, ControlLabel, HelpBlock, Button } from 'react-bootstrap';
 import MyForm from '../../../common/FormValidate';
 import { createUser, updateUser, editUser } from '../../../../actions/user';
@@ -34,10 +35,12 @@ class CreateOrEditUser extends React.Component {
     const { userSelected } = this.props;
     const isEdit = !!this.props.match.params.id;
     this.props.validateForm(userSelected, (validate) => {
-      this.props.dispatch(isEdit ? editUser(validate.value, this.props.match.params.id) : createUser(validate.value))
-        .then(() => {
-          this.props.history.push('/');
-        }); 
+      if (isEmpty(validate.error)) {
+        this.props.dispatch(isEdit ? editUser(validate.value, this.props.match.params.id) : createUser(validate.value))
+          .then(() => {
+            this.props.history.push('/');
+          }); 
+      }
     });
   }
 
