@@ -1,7 +1,7 @@
 {
-  "name": "nana",
+  "name": "pg-react",
   "version": "1.0.0",
-  "description": "Project demo react",
+  "description": "Reactjs - Project demo",
   "main": "src/root.js",
   "scripts": {
     "dev": "webpack-dev-server --config ./webpack/webpack.config.dev.js",
@@ -9,6 +9,9 @@
   },
   "author": "Son Pham",
   "license": "ISC",
+  "repository": {
+    "url": "https://github.com/phamtungson/pg_react_demo.git"
+  },
   "dependencies": {
     "axios": "^0.16.2",
     "babel-polyfill": "^6.23.0",

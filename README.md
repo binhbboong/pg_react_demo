@@ -5,14 +5,12 @@ This project use Yarn is an allternative package manager for the node built in N
 ```bash
 npm install -g yarn
 ```
-
 ## Running in dev mode:
 
 ```bash
 $ yarn
 $ yarn run dev
 ```
-
 
 ## Building production:
 
@@ -23,5 +21,5 @@ $ yarn run build
 ## ESLInt Setup with Visual Studio Code:
 
 ```
-Install [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) extension
+Install [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) extension on Visual Studio Code
 ```
