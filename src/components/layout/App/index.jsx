@@ -5,7 +5,7 @@ import UserList from '../../pages/User/List';
 import CreateOrEditUser from '../../pages/User/CreatOrEdit';
 import './styles.less';
 
-export class App extends React.Component {
+class App extends React.Component {
   render() {
     return (
       <div className="app">
