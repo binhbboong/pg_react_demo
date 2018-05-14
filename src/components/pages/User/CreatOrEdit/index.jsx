@@ -68,7 +68,7 @@ class CreateOrEditUser extends React.Component {
           type="text"
           label="Name"
           placeholder="Enter name"
-          value={userSelected.name}
+          value={userSelected && userSelected.name}
           onChange={this.handleUpdate('name')}
           error={form.error.name}
           name="name"
@@ -78,7 +78,7 @@ class CreateOrEditUser extends React.Component {
           type="text"
           label="Username"
           placeholder="Enter username"
-          value={userSelected.username}
+          value={userSelected && userSelected.username}
           onChange={this.handleUpdate('username')}
           name="username"
           error={form.error.username}
@@ -88,7 +88,7 @@ class CreateOrEditUser extends React.Component {
           label="Email Address"
           placeholder="Enter email"
           type="email"
-          value={userSelected.email}
+          value={userSelected && userSelected.email}
           onChange={this.handleUpdate('email')}
           error={form.error.email}
           name="email"

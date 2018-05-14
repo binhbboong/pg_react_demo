@@ -6,6 +6,10 @@ import CreateOrEditUser from '../../pages/User/CreatOrEdit';
 import './styles.less';
 
 class App extends React.Component {
+  constructor(props) {
+    super(props)
+  }
+
   render() {
     return (
       <div className="app">
@@ -16,7 +20,7 @@ class App extends React.Component {
           <Route
             path="/user/:id"
             render={
-              props => (this.props.users.length ? (<CreateOrEditUser {...this.props} {...props} />) : (<Redirect to="/user" />))
+              props => (this.props.users && this.props.users.length ? (<CreateOrEditUser {...this.props} {...props} />) : (<Redirect to="/user" />))
             }
           />
         </Switch>
