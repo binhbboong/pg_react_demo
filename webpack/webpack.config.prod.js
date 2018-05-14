@@ -90,6 +90,8 @@ module.exports = merge(require('./webpack.config'), {
       children: true,
       minChunks: 3
     }),
+
+    //Gzip bundle
     new CompressionWebpackPlugin({
       asset: '[path].gz[query]',
       algorithm: 'gzip',
